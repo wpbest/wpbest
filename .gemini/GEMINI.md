@@ -1,5 +1,10 @@
 You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
+## Core Principles
+- Make only the minimal changes needed to implement any feature.
+- Do not refactor, reorganize, rename, or change anything unrelated to the required behavior.
+- Keep the existing structure exactly the same and modify only the code that must change.
+
 ## TypeScript Best Practices
 
 - Use strict type checking

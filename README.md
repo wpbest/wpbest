@@ -130,7 +130,55 @@ UPDATE package.json (1442 bytes)
 UPDATE src/styles.scss (1329 bytes) 
 UPDATE src/index.html (641 bytes) 
 
-# Build
+## Setup Firebase
+
+Craete a new project on Firebase Console
+
+[Firebase Console](https://console.firebase.google.com/)
+
+```typescript
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD6-WJFqXO2fFmsdWklMhRSKl_qM4xV-wU",
+  authDomain: "wpbest-org.firebaseapp.com",
+  projectId: "wpbest-org",
+  storageBucket: "wpbest-org.firebasestorage.app",
+  messagingSenderId: "949684561776",
+  appId: "1:949684561776:web:19f119faa1d78f925c51b5",
+  measurementId: "G-ZQBY50XJ77"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+```
+## Google Service Account
+firebase-adminsdk-fbsvc@wpbest-org.iam.gserviceaccount.com
+
+## Google Service Account Repository secrets Token
+WPBEST_ORG_SERVICE_ACCOUNT
+
+```bash
+firebase login
+```
+```bash
+firebase init
+```
+
+## Add Angular Firebase
+```bash
+ng add @angular/fire
+```
+
+
+# Build Environment
 
 ## Install package library dependencies
 ```bash
