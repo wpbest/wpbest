@@ -83,7 +83,7 @@ CREATE wpbest/src/app/app.routes.server.ts (174 bytes)
 CREATE wpbest/public/favicon.ico (15086 bytes) 
 CREATE wpbest/.gemini/GEMINI.md (1983 bytes) 
 
-# Add Progressive Web App
+## Add Progressive Web App
 ```bash
 ng add @angular/pwa
 ```
@@ -111,6 +111,24 @@ UPDATE src/index.html (441 bytes)
 ✔ Packages installed successfully. 
 
 After running the application you should see an install option
+
+## Add material design
+```bash
+ng add @angular/material
+```
+✔ Determining Package Manager 
+  › Using package manager: npm 
+✔ Searching for compatible package version 
+  › Found compatible package version: @angular/material@20.2.13. 
+✔ Loading package information from registry 
+✔ Confirming installation 
+✔ Installing package 
+✔ Select a pair of starter prebuilt color palettes for your Angular Material theme Azure/Blue 
+[Preview: https://material.angular.dev?theme=azure-blue] 
+UPDATE package.json (1442 bytes) 
+✔ Packages installed successfully. 
+UPDATE src/styles.scss (1329 bytes) 
+UPDATE src/index.html (641 bytes) 
 
 # Build
 
