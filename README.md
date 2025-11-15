@@ -165,6 +165,14 @@ firebase-adminsdk-fbsvc@wpbest-org.iam.gserviceaccount.com
 ## Google Service Account Repository secrets Token
 WPBEST_ORG_SERVICE_ACCOUNT
 
+
+```bash
+firebase projects:list
+```
+```bash
+firebase use wpbest-org 
+```
+
 ```bash
 firebase login
 ```
@@ -177,6 +185,8 @@ firebase init
 ng add @angular/fire
 ```
 
++  Created service account github-action-1097097537 with Firebase Hosting admin permissions.
++  Uploaded service account JSON to GitHub as secret FIREBASE_SERVICE_ACCOUNT_WPBEST_ORG.
 
 # Build Environment
 
