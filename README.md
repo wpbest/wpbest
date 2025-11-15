@@ -188,6 +188,20 @@ ng add @angular/fire
 +  Created service account github-action-1097097537 with Firebase Hosting admin permissions.
 +  Uploaded service account JSON to GitHub as secret FIREBASE_SERVICE_ACCOUNT_WPBEST_ORG.
 
+## Create Gemini API Key
+https://aistudio.google.com/app/api-keys
+
+## Import Projects
+https://aistudio.google.com/app/projects
+
+## Create a Firebase Functions Secretes (Sample API Key)
+```bash
+echo "AIzaSyDNOwL8XJPuqtJS6Gj1h_Bs-RgeUUaXkH4" | firebase functions:secrets:set GEMINI_API_KEY --data-file=- --project wpbest-org
+```
+
+# Deploy Firebase Fuctions
+firebase deploy --only functions
+
 # Build Environment
 
 ## Install package library dependencies
