@@ -50,44 +50,74 @@ gemini
 ng new wpbest --routing --style scss --skip-install --skip-git --strict --ssr
 ```
 ✔ Do you want to create a 'zoneless' application without 
-zone.js? Yes
+zone.js? Yes 
 ✔ Which AI tools do you want to configure with Angular   
 best practices? https://angular.dev/ai/develop-with-ai   
-None, Gemini         [
-https://ai.google.dev/gemini-api/docs
-        ]
-CREATE wpbest/angular.json (2656 bytes)
-CREATE wpbest/package.json (1331 bytes)
-CREATE wpbest/README.md (1529 bytes)
-CREATE wpbest/tsconfig.json (1026 bytes)
-CREATE wpbest/.editorconfig (331 bytes)
-CREATE wpbest/.gitignore (647 bytes)
-CREATE wpbest/tsconfig.app.json (464 bytes)
-CREATE wpbest/tsconfig.spec.json (449 bytes)
-CREATE wpbest/.vscode/extensions.json (134 bytes)
-CREATE wpbest/.vscode/launch.json (490 bytes)
-CREATE wpbest/.vscode/tasks.json (980 bytes)
-CREATE wpbest/src/main.ts (228 bytes)
-CREATE wpbest/src/index.html (305 bytes)
-CREATE wpbest/src/styles.scss (81 bytes)
-CREATE wpbest/src/main.server.ts (300 bytes)
-CREATE wpbest/src/server.ts (1677 bytes)
-CREATE wpbest/src/app/app.spec.ts (805 bytes)
-CREATE wpbest/src/app/app.ts (301 bytes)
-CREATE wpbest/src/app/app.scss (0 bytes)
-CREATE wpbest/src/app/app.html (20464 bytes)
-CREATE wpbest/src/app/app.config.ts (524 bytes)
-CREATE wpbest/src/app/app.routes.ts (80 bytes)
-CREATE wpbest/src/app/app.config.server.ts (438 bytes)
-CREATE wpbest/src/app/app.routes.server.ts (174 bytes)
-CREATE wpbest/public/favicon.ico (15086 bytes)
-CREATE wpbest/.gemini/GEMINI.md (1983 bytes)
+None, Gemini         [ 
+https://ai.google.dev/gemini-api/docs 
+        ] 
+CREATE wpbest/angular.json (2656 bytes) 
+CREATE wpbest/package.json (1331 bytes) 
+CREATE wpbest/README.md (1529 bytes) 
+CREATE wpbest/tsconfig.json (1026 bytes) 
+CREATE wpbest/.editorconfig (331 bytes) 
+CREATE wpbest/.gitignore (647 bytes) 
+CREATE wpbest/tsconfig.app.json (464 bytes) 
+CREATE wpbest/tsconfig.spec.json (449 bytes) 
+CREATE wpbest/.vscode/extensions.json (134 bytes) 
+CREATE wpbest/.vscode/launch.json (490 bytes) 
+CREATE wpbest/.vscode/tasks.json (980 bytes) 
+CREATE wpbest/src/main.ts (228 bytes) 
+CREATE wpbest/src/index.html (305 bytes) 
+CREATE wpbest/src/styles.scss (81 bytes) 
+CREATE wpbest/src/main.server.ts (300 bytes) 
+CREATE wpbest/src/server.ts (1677 bytes) 
+CREATE wpbest/src/app/app.spec.ts (805 bytes) 
+CREATE wpbest/src/app/app.ts (301 bytes) 
+CREATE wpbest/src/app/app.scss (0 bytes) 
+CREATE wpbest/src/app/app.html (20464 bytes) 
+CREATE wpbest/src/app/app.config.ts (524 bytes) 
+CREATE wpbest/src/app/app.routes.ts (80 bytes) 
+CREATE wpbest/src/app/app.config.server.ts (438 bytes) 
+CREATE wpbest/src/app/app.routes.server.ts (174 bytes) 
+CREATE wpbest/public/favicon.ico (15086 bytes) 
+CREATE wpbest/.gemini/GEMINI.md (1983 bytes) 
+
+# Add Progressive Web App
+```bash
+ng add @angular/pwa
+```
+✔ Determining Package Manager 
+  › Using package manager: npm 
+✔ Searching for compatible package version 
+  › Found compatible package version: @angular/pwa@20.3.10. 
+✔ Loading package information from registry 
+✔ Confirming installation 
+✔ Installing package in temporary location 
+CREATE ngsw-config.json (669 bytes) 
+CREATE public/manifest.webmanifest (1276 bytes) 
+CREATE public/icons/icon-128x128.png (2875 bytes)
+CREATE public/icons/icon-144x144.png (3077 bytes) 
+CREATE public/icons/icon-152x152.png (3293 bytes) 
+CREATE public/icons/icon-192x192.png (4306 bytes) 
+CREATE public/icons/icon-384x384.png (11028 bytes) 
+CREATE public/icons/icon-512x512.png (16332 bytes) 
+CREATE public/icons/icon-72x72.png (1995 bytes) 
+CREATE public/icons/icon-96x96.png (2404 bytes) 
+UPDATE angular.json (2750 bytes) 
+UPDATE package.json (1373 bytes) 
+UPDATE src/app/app.config.ts (751 bytes) 
+UPDATE src/index.html (441 bytes) 
+✔ Packages installed successfully. 
+
+After running the application you should see an install option
 
 # Build
 
 ## Install package library dependencies
+```bash
 npm install
-
+```
 ## Development servernpm
 
 To start a local development server, run:
