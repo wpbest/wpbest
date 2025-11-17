@@ -9,10 +9,26 @@ const geminiApiKey = defineSecret("GEMINI_API_KEY");
 export const invokeLLM = onRequest(
   {
     timeoutSeconds: 300,
-    cors: true,
-    secrets: [geminiApiKey]
+    secrets: [geminiApiKey],
   },
   async (req, res) => {
+    // --- Manual CORS handling ---
+    res.setHeader("Access-Control-Allow-Origin", "*"); // allow all origins temporarily
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    // Handle preflight OPTIONS request
+    if (req.method === "OPTIONS") {
+      res.status(204).send("");
+      return;
+    }
+
+    // Only allow POST
+    if (req.method !== "POST") {
+      res.status(405).send("Method Not Allowed");
+      return;
+    }
+
     try {
       const text = req.body?.data?.text;
       if (!text) {
@@ -26,12 +42,13 @@ export const invokeLLM = onRequest(
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text }] }]
-          })
+            contents: [{ role: "user", parts: [{ text }] }],
+          }),
         }
       );
 
-      res.status(200).json(await response.json());
+      const data = await response.json();
+      res.status(200).json(data);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       console.error("LLM error:", message);
