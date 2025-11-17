@@ -9,4 +9,19 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('wpbest-website');
+  protected readonly error = signal<unknown | undefined>(undefined);
+
+  async onTestButtonClick() {
+    this.error.set(undefined);
+    try {
+      console.log('Start of Test button clicked');
+    } catch (err) {
+      this.error.set(err);
+      console.error('Error:', err);
+    } finally {
+      console.log('End of Test button clicked');
+    }
+  }
+
 }
+
