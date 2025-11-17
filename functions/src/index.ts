@@ -12,18 +12,15 @@ export const invokeLLM = onRequest(
     secrets: [geminiApiKey],
   },
   async (req, res) => {
-    // --- Manual CORS handling ---
-    res.setHeader("Access-Control-Allow-Origin", "*"); // allow all origins temporarily
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    // Handle preflight OPTIONS request
     if (req.method === "OPTIONS") {
       res.status(204).send("");
       return;
     }
 
-    // Only allow POST
     if (req.method !== "POST") {
       res.status(405).send("Method Not Allowed");
       return;
@@ -36,8 +33,10 @@ export const invokeLLM = onRequest(
         return;
       }
 
+      const key = await geminiApiKey.value();
+
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${geminiApiKey.value()}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
