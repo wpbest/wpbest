@@ -38,7 +38,7 @@ CREATE .gemini/GEMINI.md (1983 bytes)
 To start a local development server, run:
 
 ```bash
-ng serve
+ng serve -o
 ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
@@ -60,6 +60,10 @@ ng generate --help
 ## Building
 
 To build the project run:
+
+```bash
+npm install
+```
 
 ```bash
 ng build
