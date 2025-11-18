@@ -243,6 +243,14 @@ npm install --save firebase-functions@latest
 ```bash
 npm install --save firebase-admin@latest
 ```
+## Make sure you change your product id for your Firebase Function
+
+https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/invokeLLM
+
+to
+
+https://us-central1-wpbest-website.cloudfunctions.net/invokeLLM
+
 
 Build the firebase functions
 ```bash
