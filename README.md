@@ -2,7 +2,7 @@
 wpbest-website is a repository that contains the source code for http://wpbest.org, the official website for William Paul Best. The site showcases his 40+ years of experience as a Computer Scientist and Mathematician in Artificial Intelligence and promotes his YouTube channel 'wpbest'.
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
 
-# Developers
+# Developemnt Environment
 GitHub: wpbest      Gmail:wpbest@gmail.com
 GitHub: senshi111   GMail:banenicovic@gmail.com
 
@@ -10,6 +10,28 @@ Restore Git Repository to a specified commit
 ```bash
 git reset --hard abc1234
 git push origin HEAD --force
+```
+
+## install Node JS
+```bash
+nvm list
+nvm install 22.21.1
+nvm use 22.21.1
+```
+
+## Install Angular
+```bash
+npm install -g @angular/cli
+```
+
+## Install Firebase Tools and CLI
+```bash
+npm i -g firebase-tools
+```
+
+## Install Google Gemini CLI
+```bash
+npm install -g @google/gemini-cli
 ```
 
 Firebase MCP Server
@@ -233,6 +255,8 @@ Authentication Emulator, Functions Emulator, Hosting Emulator
 
 ## Import Projects
 https://aistudio.google.com/app/projects
+
+https://console.cloud.google.com/vertex-ai/studio/settings/api-keys?project=wpbest-website
 
 ## Create Gemini API Key
 https://aistudio.google.com/app/api-keys
