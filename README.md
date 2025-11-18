@@ -68,6 +68,24 @@ UPDATE src/app/app.config.ts (1312 bytes)
 UPDATE src/index.html (448 bytes)
 ✔ Packages installed successfully.
 
+## Add material design
+```bash
+ng add @angular/material
+```
+✔ Determining Package Manager
+  › Using package manager: npm
+✔ Searching for compatible package version
+  › Found compatible package version: @angular/material@20.2.13.
+✔ Loading package information from registry
+✔ Confirming installation
+✔ Installing package
+✔ Select a pair of starter prebuilt color palettes for your Angular Material theme Azure/Blue         [Preview:
+https://material.angular.dev?theme=azure-blue]
+UPDATE package.json (1256 bytes)
+✔ Packages installed successfully.
+UPDATE src/styles.scss (1393 bytes)
+UPDATE src/index.html (648 bytes)
+
 ```bash
 ng add @angular/fire
 ```
