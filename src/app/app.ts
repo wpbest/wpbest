@@ -13,7 +13,7 @@ enum UIMode {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FormsModule, HttpClientModule, CommonModule], // Removed HttpClientModule, added FormsModule
+  imports: [FormsModule, HttpClientModule, CommonModule], // Removed HttpClientModule, added FormsModule
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -52,7 +52,14 @@ export class App {
               interim_transcript += event.results[i][0].transcript;
             }
           }
-          this.inputText.set(final_transcript + interim_transcript);
+
+          if (this.currentMode() === UIMode.Dictate) {
+            this.inputText.set(final_transcript + interim_transcript);
+          } else if (this.currentMode() === UIMode.Voice && final_transcript.trim().length > 0) {
+            this.chatMessages.update((messages: any) => [...messages, { type: 'user', text: final_transcript }]);
+            this.invokeLLM(final_transcript);
+            this.inputText.set(''); // Clear input text after processing final transcript in voice mode
+          }
         };
 
         this.recognition.onerror = (event: any) => {
@@ -60,7 +67,13 @@ export class App {
         };
 
         this.recognition.onend = () => {
-          this.currentMode.set(UIMode.Default);
+          // Only set to Default if voice mode is not enabled, otherwise, recognition might restart
+          if (!this.isVoiceModeEnabled()) {
+            this.currentMode.set(UIMode.Default);
+          } else {
+            // If in voice mode and recognition ends, restart it automatically
+            this.recognition.start();
+          }
         };
       }
     }
@@ -109,40 +122,35 @@ export class App {
   toggleVoiceMode() {
     this.isVoiceModeEnabled.update((value: any) => !value);
     if (this.isVoiceModeEnabled()) {
+      this.chatMessages.set([]); // Clear chat messages when entering voice mode
       this.currentMode.set(UIMode.Voice);
-      this.simulateVoiceConversation();
+      if (this.recognition) {
+        this.recognition.start();
+      }
     } else {
+      this.chatMessages.set([]); // Clear chat messages when exiting voice mode
       this.currentMode.set(UIMode.Default);
-      // Stop voice conversation simulation when voice mode is disabled
-      // (The simulateVoiceConversation function needs to be updated to handle this)
+      if (this.recognition) {
+        this.recognition.stop();
+      }
     }
   }
 
   toggleMicMute() {
     this.isMicMuted.update((value: any) => !value);
+    // This function now only manages the mute state.
   }
 
   cancelVoiceMode() {
     this.isVoiceModeEnabled.set(false);
     this.currentMode.set(UIMode.Default);
     this.isMicMuted.set(false); // Reset mute state when exiting voice mode
+    this.chatMessages.set([]); // Clear chat messages when cancelling voice mode
+    if (this.recognition) {
+        this.recognition.stop();
+    }
   }
 
-  private simulateAssistantResponse() {
-    this.isTyping.set(true);
-    setTimeout(() => {
-      this.chatMessages.update((messages: any) => [
-        ...messages,
-        { type: 'assistant', text: 'This is a mocked assistant response.' },
-      ]);
-      this.isTyping.set(false);
-    }, 3000);
-  }
-
-  private simulateVoiceConversation() {
-    // Removed simulated incoming messages functionality as requested.
-    // This method will now only manage the voice mode state without adding chat messages.
-  }
   protected async invokeLLM(prompt: string) {
     this.isTyping.set(true);
     this.error.set(undefined);
@@ -176,7 +184,9 @@ export class App {
         ...messages,
         { type: 'assistant', text: output },
       ]);
-      this.playSpeech(output);
+      if (this.currentMode() === UIMode.Voice) {
+        this.playSpeech(output);
+      }
       this.isTyping.set(false);
       console.log('LLM Output:', output);
       this.isTyping.set(false);
