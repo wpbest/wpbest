@@ -2,13 +2,23 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { RouterOutlet } from '@angular/router';
+import removeMd from 'remove-markdown';
+import { decode } from 'he';
 import { FirebaseSecrets } from './firebase-secrets';
 
 enum UIMode {
   Default,
   Dictate,
   Voice,
+}
+
+export function cleanTextForTTS(input: string): string {
+  if (!input) return "";
+
+  let s = removeMd(input);   // Remove bold/italic/markdown
+  s = decode(s);             // Decode HTML entities
+  s = s.replace(/\*/g, "");  // Remove any remaining literal asterisks
+  return s.trim();
 }
 
 @Component({
@@ -28,10 +38,9 @@ export class App {
   private recognition: any;
   protected readonly error = signal<unknown | undefined>(undefined);
   protected readonly geminiKey = signal<string | undefined>(undefined);
-
   private secrets = inject(FirebaseSecrets);
   private http = inject(HttpClient);
-  // private readonly ttsService = inject(TtsService);
+
   constructor() {
     if (typeof window !== 'undefined') {
       const SpeechRecognition =
@@ -40,11 +49,9 @@ export class App {
         this.recognition = new SpeechRecognition();
         this.recognition.continuous = true;
         this.recognition.interimResults = true;
-
         this.recognition.onresult = (event: any) => {
           let interim_transcript = '';
           let final_transcript = '';
-
           for (let i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
               final_transcript += event.results[i][0].transcript;
@@ -52,20 +59,17 @@ export class App {
               interim_transcript += event.results[i][0].transcript;
             }
           }
-
           if (this.currentMode() === UIMode.Dictate) {
             this.inputText.set(final_transcript + interim_transcript);
           } else if (this.currentMode() === UIMode.Voice && final_transcript.trim().length > 0) {
             this.chatMessages.update((messages: any) => [...messages, { type: 'user', text: final_transcript }]);
             this.invokeLLM(final_transcript);
-            this.inputText.set(''); // Clear input text after processing final transcript in voice mode
+            this.inputText.set('');
           }
         };
-
         this.recognition.onerror = (event: any) => {
           console.error('Speech recognition error', event.error);
         };
-
         this.recognition.onend = () => {
           // Only set to Default if voice mode is not enabled, otherwise, recognition might restart
           if (!this.isVoiceModeEnabled()) {
@@ -155,12 +159,9 @@ export class App {
     this.isTyping.set(true);
     this.error.set(undefined);
     console.log('=== Test Button Clicked ===');
-
     console.log('prompt:', prompt);
-
     try {
       console.log('Calling Firebase invokeLLM function...');
-
       const response = await fetch(
         'https://us-central1-wpbest-website.cloudfunctions.net/invokeLLM',
         {
@@ -171,22 +172,16 @@ export class App {
           }),
         }
       );
-
       console.log('HTTP Status:', response.status);
-
       const result = await response.json();
       console.log('LLM Raw Response:', result);
-
-      // Final processed logging
       const output = result?.candidates?.[0]?.content?.parts?.[0]?.text ?? JSON.stringify(result);
-
       this.chatMessages.update((messages: any) => [
         ...messages,
         { type: 'assistant', text: output },
       ]);
-      if (this.currentMode() === UIMode.Voice) {
-        this.playSpeech(output);
-      }
+      let cleanedText = cleanTextForTTS(output);
+      this.playSpeech(cleanedText);
       this.isTyping.set(false);
       console.log('LLM Output:', output);
       this.isTyping.set(false);
@@ -199,6 +194,7 @@ export class App {
       console.log('=== Test Button Completed ===');
     }
   }
+
   protected async testCode() {
     const textToSpeak = 'Hello, this is a test of the Google Cloud text to speech functionality.';
     this.playSpeech(textToSpeak);
