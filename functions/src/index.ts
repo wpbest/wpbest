@@ -35,7 +35,7 @@ export const speak = onRequest(
 
         const request = {
           input: { text: text },
-          voice: { languageCode: "en-GB", name: "en-GB-Wavenet-A" },
+          voice: { languageCode: "en-GB", ssmlGender: 'FEMALE', name: "en-GB-Neural2-A" },
           audioConfig: { audioEncoding: "MP3" as const },
         };
 
