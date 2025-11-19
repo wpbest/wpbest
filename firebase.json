@@ -25,6 +25,10 @@
     ],
     "rewrites": [
       {
+        "source": "/api/speak",
+        "function": "speak"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

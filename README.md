@@ -267,6 +267,10 @@ echo "AIzaSyDNOwL8XJPuqtJS6Gj1h_Bs-RgeUUaXkH4" | firebase functions:secrets:set 
 ```
 
 ```bash
+echo "AQ.Ab8RN6La_rVF431Lt0pvhbVac2FNI-KIQbP8qndH2qbYBeKNLA" | firebase functions:secrets:set GOOGLE_TEXT_TO_SPEECH_API_KEY --data-file=- --project wpbest-website
+```
+
+```bash
 npm install --save firebase-functions@latest
 ```
 ```bash

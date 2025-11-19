@@ -31,7 +31,7 @@ export class App {
 
   private secrets = inject(FirebaseSecrets);
   private http = inject(HttpClient);
-
+  // private readonly ttsService = inject(TtsService);
   constructor() {
     if (typeof window !== 'undefined') {
       const SpeechRecognition =
@@ -66,6 +66,15 @@ export class App {
     }
   }
 
+  playSpeech(text: string): void {
+    this.secrets.getSpeech(text).subscribe(data => {
+      const blob = new Blob([data], { type: 'audio/mp3' });
+      const url = window.URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.play();
+    });
+  }
+  
   startDictateMode() {
     if (this.recognition) {
       this.currentMode.set(UIMode.Dictate);
@@ -167,6 +176,7 @@ export class App {
         ...messages,
         { type: 'assistant', text: output },
       ]);
+      this.playSpeech(output);
       this.isTyping.set(false);
       console.log('LLM Output:', output);
       this.isTyping.set(false);
@@ -180,7 +190,7 @@ export class App {
     }
   }
   protected async testCode() {
-    const prompt = 'Hello Gemini Flash Lite 2.5. This is a test.';
-    this.invokeLLM(prompt);
+    const textToSpeak = 'Hello, this is a test of the Google Cloud text to speech functionality.';
+    this.playSpeech(textToSpeak);
   }
 }

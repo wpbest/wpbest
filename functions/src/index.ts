@@ -2,12 +2,59 @@ import cors from 'cors';
 import { initializeApp } from 'firebase-admin/app';
 import { defineSecret } from 'firebase-functions/params';
 import { onRequest } from 'firebase-functions/v2/https';
+import { TextToSpeechClient } from "@google-cloud/text-to-speech";
 
 initializeApp();
 
 const geminiApiKey = defineSecret('GEMINI_API_KEY');
+const googleTtsApiKey = defineSecret('GOOGLE_TEXT_TO_SPEECH_API_KEY');
 
 const corsMiddleware = cors({ origin: true, credentials: true });
+
+export const speak = onRequest(
+  { secrets: [googleTtsApiKey] },
+  (req, res) => {
+    corsMiddleware(req, res, async () => {
+      if (req.method !== "POST") {
+        res.status(405).send("Method Not Allowed");
+        return;
+      }
+
+      const text = req.body.text;
+      if (!text) {
+        res.status(400).send("Bad Request: Missing 'text' in body.");
+        return;
+      }
+
+      try {
+        const ttsClient = new TextToSpeechClient({
+            clientOptions: {
+                apiKey: googleTtsApiKey.value()
+            }
+        });
+
+        const request = {
+          input: { text: text },
+          voice: { languageCode: "en-GB", name: "en-GB-Wavenet-A" },
+          audioConfig: { audioEncoding: "MP3" as const },
+        };
+
+        const [response] = await ttsClient.synthesizeSpeech(request);
+        const audioContent = response.audioContent;
+
+        if (audioContent) {
+          res.set("Content-Type", "audio/mpeg");
+          res.status(200).send(audioContent);
+        } else {
+          res.status(500).send("Internal Server Error: Audio content is null.");
+        }
+      } catch (error) {
+        console.error("ERROR:", error);
+        res.status(500).send("Internal Server Error");
+      }
+    });
+  }
+);
 
 export const invokeLLM = onRequest(
   {
