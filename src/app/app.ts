@@ -23,7 +23,7 @@ export function cleanTextForTTS(input: string): string {
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, HttpClientModule, CommonModule], // Removed HttpClientModule, added FormsModule
+  imports: [FormsModule, CommonModule], // Removed HttpClientModule, added FormsModule
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
