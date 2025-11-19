@@ -14,7 +14,7 @@ jobs:
       - name: Install Dependencies
         run: npm --prefix functions ci
       - name: Deploy Firebase Functions
-        uses: w9jds/firebase-action@v2
+        uses: w9jds/firebase-action@v14.24.1
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WPBEST_WEBSITE }}
