@@ -6,6 +6,7 @@ import removeMd from 'remove-markdown';
 import { decode } from 'he';
 import { FirebaseSecrets } from './firebase-secrets';
 import { MarkdownPipe } from './markdown.pipe';
+import { ACCURA_AI_PROMPT } from './accura-ai-prompt';
 
 enum UIMode {
   Default,
@@ -169,7 +170,10 @@ export class App {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            data: { text: prompt },
+            data: {
+              text: prompt,
+              systemInstruction: ACCURA_AI_PROMPT
+            },
           }),
         }
       );

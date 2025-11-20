@@ -25,12 +25,12 @@ if (Test-Path ".env") {
 }
 
 # Get the API key
-$apiKey = $env:GEMINI_API_KEY
+$apiKey = $env:GOOGLE_API_KEY
 if ([string]::IsNullOrWhiteSpace($apiKey)) {
-    Log-Info "❌ GEMINI_API_KEY not found in .env"
+    Log-Info "❌ GOOGLE_API_KEY not found in .env"
     exit
 }
-Log-Info "GEMINI_API_KEY loaded successfully."
+Log-Info "GOOGLE_API_KEY loaded successfully."
 
 # Fixed prompt
 $fixedPrompt = "Hello Google Gemini Flash lite 1.5"
@@ -63,7 +63,7 @@ Log-Info "Request URI: $uri"
 
 # Send request and handle errors
 try {
-    Log-Info "Sending request to Gemini API..."
+    Log-Info "Sending request to Google API..."
     $response = Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -Body $bodyJson
     Log-Info "Request completed successfully."
 

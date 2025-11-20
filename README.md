@@ -258,17 +258,18 @@ https://aistudio.google.com/app/projects
 
 https://console.cloud.google.com/vertex-ai/studio/settings/api-keys?project=wpbest-website
 
-## Create Gemini API Key
+## Create Google Gemini API Key
 https://aistudio.google.com/app/api-keys
 
 ## Create a Firebase Functions Secretes (Sample API Key)
 ```bash
-echo "AIzaSyDNOwL8XJPuqtJS6Gj1h_Bs-RgeUUaXkH4" | firebase functions:secrets:set GEMINI_API_KEY --data-file=- --project wpbest-website
+echo "AIzaSyDNOwL8XJPuqtJS6Gj1h_Bs-RgeUUaXkH4" | firebase functions:secrets:set GOOGLE_API_KEY --data-file=- --project wpbest-website
 ```
 
-```bash
-echo "AQ.Ab8RN6La_rVF431Lt0pvhbVac2FNI-KIQbP8qndH2qbYBeKNLA" | firebase functions:secrets:set GOOGLE_TEXT_TO_SPEECH_API_KEY --data-file=- --project wpbest-website
 ```
+## Google Secret Manager
+https://console.cloud.google.com/security/secret-manager?referrer=search&hl=en&project=wpbest-website
+
 
 ```bash
 npm install --save firebase-functions@latest
