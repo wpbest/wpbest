@@ -218,6 +218,7 @@ export class App {
     if (this.recognition) {
       this.recognition.stop();
     }
+    this.stopAudio();
   }
 
   private destroyRef = inject(DestroyRef);
