@@ -74,6 +74,10 @@ export class App {
               ...messages,
               { type: 'user', text: final_transcript },
             ]);
+            requestAnimationFrame(() => {
+              const chatArea = document.querySelector('.chat-area');
+              if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
+            });
             this.invokeLLM(final_transcript);
             this.inputText.set('');
           }
@@ -254,6 +258,10 @@ export class App {
         ...messages,
         { type: 'assistant', text: output },
       ]);
+      requestAnimationFrame(() => {
+        const chatArea = document.querySelector('.chat-area');
+        if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
+      });
       let cleanedText = cleanTextForTTS(output);
       this.playSpeech(cleanedText);
       this.isTyping.set(false);
