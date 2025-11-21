@@ -158,6 +158,11 @@ export class App {
       this.currentAudio = null;
       this.isAudioPlaying.set(false);
       this.isAudioPaused.set(false);
+      // Restart speech recognition in voice mode after stopping audio
+      if (this.currentMode() === UIMode.Voice && this.recognition && this.isVoiceModeEnabled()) {
+        this.shouldRestartRecognition = true; // Re-enable auto-restart
+        this.recognition.start();
+      }
     }
   }
 
