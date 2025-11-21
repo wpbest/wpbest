@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule
 import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
 import { decode } from 'he';
 import removeMd from 'remove-markdown';
-import { ACCURA_AI_PROMPT } from './accura-ai-prompt';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AiService } from './ai.service';
 import { FirebaseSecrets } from './firebase-secrets';
 import { MarkdownPipe } from './markdown.pipe';
 
@@ -42,13 +43,13 @@ export class App {
   protected isAudioPlaying = signal(false); // Signal for audio playback state
   protected isAudioPaused = signal(false); // Signal for audio paused state
   private currentAudio: HTMLAudioElement | null = null; // Reference to current audio
-  private shouldRestartRecognition = true; // Flag to control auto-restart of recognition
   private recognition: any;
   protected readonly error = signal<unknown | undefined>(undefined);
   protected readonly geminiKey = signal<string | undefined>(undefined);
   private secrets = inject(FirebaseSecrets);
   private http = inject(HttpClient);
-
+  private aiService = inject(AiService);
+  
   constructor() {
     if (typeof window !== 'undefined') {
       const SpeechRecognition =
@@ -85,8 +86,8 @@ export class App {
           // Only set to Default if voice mode is not enabled, otherwise, recognition might restart
           if (!this.isVoiceModeEnabled()) {
             this.currentMode.set(UIMode.Default);
-          } else if (this.shouldRestartRecognition) {
-            // If in voice mode and recognition ends, restart it automatically (unless we're pausing for audio)
+          } else {
+            // If in voice mode and recognition ends, restart it automatically
             this.recognition.start();
           }
         };
@@ -107,11 +108,6 @@ export class App {
       audio.onplay = () => {
         this.isAudioPlaying.set(true);
         this.isAudioPaused.set(false);
-        // Pause speech recognition in voice mode to prevent picking up assistant's voice
-        if (this.currentMode() === UIMode.Voice && this.recognition) {
-          this.shouldRestartRecognition = false; // Prevent auto-restart
-          this.recognition.stop();
-        }
       };
       audio.onpause = () => {
         this.isAudioPaused.set(true);
@@ -120,21 +116,11 @@ export class App {
         this.isAudioPlaying.set(false);
         this.isAudioPaused.set(false);
         this.currentAudio = null;
-        // Resume speech recognition in voice mode after audio ends
-        if (this.currentMode() === UIMode.Voice && this.recognition && this.isVoiceModeEnabled()) {
-          this.shouldRestartRecognition = true; // Re-enable auto-restart
-          this.recognition.start();
-        }
       };
       audio.onerror = () => {
         this.isAudioPlaying.set(false);
         this.isAudioPaused.set(false);
         this.currentAudio = null;
-        // Resume speech recognition in voice mode on error
-        if (this.currentMode() === UIMode.Voice && this.recognition && this.isVoiceModeEnabled()) {
-          this.shouldRestartRecognition = true; // Re-enable auto-restart
-          this.recognition.start();
-        }
       };
 
       audio.play();
@@ -219,54 +205,44 @@ export class App {
     this.currentMode.set(UIMode.Default);
     this.isMicMuted.set(false); // Reset mute state when exiting voice mode
     this.chatMessages.set([]); // Clear chat messages when cancelling voice mode
-    this.stopAudio(); // Stop any playing audio when exiting voice mode
     if (this.recognition) {
-      this.shouldRestartRecognition = true; // Re-enable auto-restart for next time
       this.recognition.stop();
     }
   }
 
-  protected async invokeLLM(prompt: string) {
+  private destroyRef = inject(DestroyRef);
+
+  protected invokeLLM(prompt: string) {
     this.isTyping.set(true);
     this.error.set(undefined);
     console.log('=== Test Button Clicked ===');
     console.log('prompt:', prompt);
-    try {
-      console.log('Calling Firebase invokeLLM function...');
-      const response = await fetch(
-        'https://us-central1-wpbest-website.cloudfunctions.net/invokeLLM',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            data: {
-              text: prompt,
-              systemInstruction: ACCURA_AI_PROMPT,
-            },
-          }),
-        }
-      );
-      console.log('HTTP Status:', response.status);
-      const result = await response.json();
-      console.log('LLM Raw Response:', result);
-      const output = result?.candidates?.[0]?.content?.parts?.[0]?.text ?? JSON.stringify(result);
-      this.chatMessages.update((messages: any) => [
-        ...messages,
-        { type: 'assistant', text: output },
-      ]);
-      let cleanedText = cleanTextForTTS(output);
-      this.playSpeech(cleanedText);
-      this.isTyping.set(false);
-      console.log('LLM Output:', output);
-      this.isTyping.set(false);
-    } catch (err) {
-      this.isTyping.set(false);
-      console.error('invokeLLM ERROR:', err);
-      this.error.set(err);
-    } finally {
-      this.isTyping.set(false);
-      console.log('=== Test Button Completed ===');
-    }
+
+    console.log('Calling AiService invokeLLM function...');
+    this.aiService
+      .invokeLLM(prompt)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (output) => {
+          this.chatMessages.update((messages: any) => [
+            ...messages,
+            { type: 'assistant', text: output },
+          ]);
+          let cleanedText = cleanTextForTTS(output);
+          this.playSpeech(cleanedText);
+          this.isTyping.set(false);
+          console.log('LLM Output:', output);
+        },
+        error: (err) => {
+          this.isTyping.set(false);
+          console.error('invokeLLM ERROR:', err);
+          this.error.set(err);
+          console.log('=== Test Button Completed (Error) ===');
+        },
+        complete: () => {
+          console.log('=== Test Button Completed ===');
+        },
+      });
   }
 
   protected async testCode() {
