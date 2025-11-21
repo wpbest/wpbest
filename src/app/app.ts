@@ -39,6 +39,9 @@ export class App {
   protected chatMessages = signal<Array<{ type: 'user' | 'assistant'; text: string }>>([]);
   protected isTyping = signal(false);
   protected isMicMuted = signal(false); // New signal for microphone mute state
+  protected isAudioPlaying = signal(false); // Signal for audio playback state
+  protected isAudioPaused = signal(false); // Signal for audio paused state
+  private currentAudio: HTMLAudioElement | null = null; // Reference to current audio
   private recognition: any;
   protected readonly error = signal<unknown | undefined>(undefined);
   protected readonly geminiKey = signal<string | undefined>(undefined);
@@ -91,12 +94,55 @@ export class App {
   }
 
   playSpeech(text: string): void {
+    // Stop any currently playing audio
+    this.stopAudio();
+
     this.secrets.getSpeech(text).subscribe((data) => {
       const blob = new Blob([data], { type: 'audio/mp3' });
       const url = window.URL.createObjectURL(blob);
       const audio = new Audio(url);
+      this.currentAudio = audio;
+
+      audio.onplay = () => {
+        this.isAudioPlaying.set(true);
+        this.isAudioPaused.set(false);
+      };
+      audio.onpause = () => {
+        this.isAudioPaused.set(true);
+      };
+      audio.onended = () => {
+        this.isAudioPlaying.set(false);
+        this.isAudioPaused.set(false);
+        this.currentAudio = null;
+      };
+      audio.onerror = () => {
+        this.isAudioPlaying.set(false);
+        this.isAudioPaused.set(false);
+        this.currentAudio = null;
+      };
+
       audio.play();
     });
+  }
+
+  toggleAudioPlayback(): void {
+    if (this.currentAudio) {
+      if (this.isAudioPaused()) {
+        this.currentAudio.play();
+      } else {
+        this.currentAudio.pause();
+      }
+    }
+  }
+
+  stopAudio(): void {
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.currentAudio = null;
+      this.isAudioPlaying.set(false);
+      this.isAudioPaused.set(false);
+    }
   }
 
   startDictateMode() {

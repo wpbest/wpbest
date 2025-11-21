@@ -1,12 +1,8 @@
 <main class="main-container">
   <div class="chat-area">
     @for (message of chatMessages(); track $index) {
-    <div
-      class="chat-bubble"
-      [class.user]="message.type === 'user'"
-      [class.assistant]="message.type === 'assistant'"
-      [innerHTML]="message.text | markdown"
-    ></div>
+    <div class="chat-bubble" [class.user]="message.type === 'user'" [class.assistant]="message.type === 'assistant'"
+      [innerHTML]="message.text | markdown"></div>
     } @if (isTyping()) {
     <div class="chat-bubble assistant typing-indicator">
       <span></span><span></span><span></span>
@@ -21,57 +17,26 @@
       <button class="icon-button attachment-button" title="Add files and more">
         <mat-icon>attach_file</mat-icon>
       </button>
-      <input
-        type="text"
-        placeholder="Ask anything"
-        [(ngModel)]="inputText"
-        class="text-input"
-        (keydown.enter)="sendMessage()"
-      />
+      <input type="text" placeholder="Ask anything" [(ngModel)]="inputText" class="text-input"
+        (keydown.enter)="sendMessage()" />
       <button class="icon-button mic-button" (click)="startDictateMode()" title="Dictate">
         <mat-icon>mic</mat-icon>
       </button>
-      <button
-        class="icon-button voice-wave-button"
-        (click)="toggleVoiceMode()"
-        title="Use voice mode"
-      >
+      <button class="icon-button voice-wave-button" (click)="toggleVoiceMode()" title="Use voice mode">
         <mat-icon>graphic_eq</mat-icon>
       </button>
       <button class="icon-button send-button" (click)="sendMessage()" title="Send">
         <mat-icon>send</mat-icon>
       </button>
-      <!-- <button class="icon-button test-button" (click)="testCode()" title="Test">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M16 1H8C6.34315 1 5 2.34315 5 4V20C5 21.6569 6.34315 23 8 23H16C17.6569 23 19 21.6569 19 20V4C19 2.34315 17.6569 1 16 1Z"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M10 9L14 13L18 9"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M9 5H15"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button> -->
+      @if (isAudioPlaying()) {
+      <button class="icon-button pause-audio-button" (click)="toggleAudioPlayback()"
+        [title]="isAudioPaused() ? 'Resume Audio' : 'Pause Audio'">
+        <mat-icon>{{ isAudioPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
+      </button>
+      <button class="icon-button stop-audio-button" (click)="stopAudio()" title="Stop Audio">
+        <mat-icon>stop</mat-icon>
+      </button>
+      }
     </div>
     } @else if (currentMode() === UIMode.Dictate) {
     <div class="input-bar dictate-mode">
