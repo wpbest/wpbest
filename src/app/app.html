@@ -14,9 +14,10 @@
     @if (currentMode() === UIMode.Default) {
     <div class="title">What can I help with?</div>
     <div class="input-bar">
-      <button class="icon-button attachment-button" title="Add files and more">
+      <button class="icon-button attachment-button" title="Add files and more" (click)="fileInput.click()">
         <mat-icon>attach_file</mat-icon>
       </button>
+      <input type="file" #fileInput accept=".txt,.pdf,.docx" style="display:none" (change)="onFileSelected($event)" />
       <input type="text" placeholder="Ask anything" [(ngModel)]="inputText" class="text-input"
         (keydown.enter)="sendMessage()" />
       <button class="icon-button mic-button" (click)="startDictateMode()" title="Dictate">

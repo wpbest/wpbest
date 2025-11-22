@@ -183,6 +183,17 @@ export class App {
     this.currentMode.set(UIMode.Default);
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        console.log('File loaded:', file.name, e.target.result);
+      };
+      reader.readAsText(file);
+    }
+  }
+
   sendMessage() {
     if (this.inputText().trim()) {
       let prompt: string = this.inputText();
