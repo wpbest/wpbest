@@ -47,6 +47,7 @@ export class App {
   private currentAudio: HTMLAudioElement | null = null; // Reference to current audio
   private recognition: any;
   private shouldRestartRecognition = true; // Flag to control auto-restart of recognition
+  protected isProcessingTTS = signal(false); // Signal for TTS processing state
   protected readonly error = signal<unknown | undefined>(undefined);
   protected readonly geminiKey = signal<string | undefined>(undefined);
   private secrets = inject(FirebaseSecrets);
@@ -121,6 +122,7 @@ export class App {
       };
 
       audio.onplay = () => {
+        this.isProcessingTTS.set(false); // TTS processing finished, audio started
         this.isAudioPlaying.set(true);
         this.isAudioPaused.set(false);
         // Mute mic while assistant speaks
@@ -137,6 +139,7 @@ export class App {
         resumeRecognition();
       };
       audio.onerror = () => {
+        this.isProcessingTTS.set(false); // TTS processing failed
         this.isAudioPlaying.set(false);
         this.isAudioPaused.set(false);
         this.currentAudio = null;
@@ -324,9 +327,10 @@ export class App {
             ...messages,
             { type: 'assistant', text: output },
           ]);
+          this.isTyping.set(false);
+          this.isProcessingTTS.set(true); // Start TTS processing
           let cleanedText = cleanTextForTTS(output);
           this.playSpeech(cleanedText);
-          this.isTyping.set(false);
           console.log('LLM Output:', output);
         },
         error: (err) => {

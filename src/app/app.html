@@ -73,7 +73,9 @@
         </div>
       </div>
       <div class="voice-status">
-        @if (isAudioPlaying() && !isAudioPaused()) {
+        @if (isProcessingTTS()) {
+        Preparing speech...
+        } @else if (isAudioPlaying() && !isAudioPaused()) {
         Speaking...
         } @else if (isMicMuted()) {
         Microphone Muted
