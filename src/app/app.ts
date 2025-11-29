@@ -327,6 +327,10 @@ export class App {
             ...messages,
             { type: 'assistant', text: output },
           ]);
+          requestAnimationFrame(() => {
+            const chatArea = document.querySelector('.chat-area');
+            if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
+          });
           this.isTyping.set(false);
           this.isProcessingTTS.set(true); // Start TTS processing
           let cleanedText = cleanTextForTTS(output);
