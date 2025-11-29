@@ -1,0 +1,6 @@
+# User Schema Definition
+type User @table(key: "userId") {
+  userId: String! @col(name: "user_id")
+  userName: String! @col(name: "user_name")
+  userEmail: String! @col(name: "user_email")
+}

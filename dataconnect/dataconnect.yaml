@@ -1,0 +1,13 @@
+specVersion: "v1"
+serviceId: "wpbest-website-service"
+location: "us-west3"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "wpbest-website-database"
+      cloudSql:
+        instanceId: "wpbest-website-instance"
+        # schemaValidation: "STRICT"     # STRICT mode makes Postgres schema match Data Connect exactly.
+        # schemaValidation: "COMPATIBLE" # COMPATIBLE mode makes Postgres schema compatible with Data Connect.
+connectorDirs: ["./data-connector"]

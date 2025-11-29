@@ -305,6 +305,68 @@ Authentication Emulator, Functions Emulator, Hosting Emulator
 
 +  Firebase initialization complete!
 
+```bash
+firebase init dataconnect
+```
+     ######## #### ########  ######## ########     ###     ######  ########  
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##  
+     ######    ##  ########  ######   ########  #########  ######  ######  
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##  
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########  
+  
+You're about to initialize a Firebase project in this directory:  
+  
+  C:\Users\willi\OneDrive\Documents\GitHub\wpbest-website  
+  
+Before we get started, keep in mind:  
+  
+  * You are initializing within an existing Firebase project directory  
+  
+✔ Are you ready to proceed? Yes  
+  
+=== Project Setup  
+  
+First, let's associate this project directory with a Firebase project.  
+You can create multiple project aliases by running firebase use --add,  
+  
+i  Using project wpbest-website (wpbest-website) .  
+  
+=== Dataconnect Setup  
+i  dataconnect: ensuring required API firebasedataconnect.googleapis.com is enabled...  
+i  dataconnect: ensuring required API sqladmin.googleapis.com is enabled...  
++  dataconnect: required API firebasedataconnect.googleapis.com is enabled  
++  dataconnect: required API sqladmin.googleapis.com is enabled  
+✔ Your project already has existing services. Which would you like to set up local files for?
+us-west3/wpbest-website-service  
+!  dataconnect: CloudSQL no cost trial has already been used on this project.  
++  dataconnect: Detected existing apps . (web), functions (admin_node)  
+✔ Which apps do you want to set up Data Connect SDKs in? . (web), functions (admin_node)  
++  Wrote dataconnect\dataconnect.yaml  
++  Wrote dataconnect\example\connector.yaml  
++  Wrote dataconnect\example\connector.yaml  
+i  dataconnect: Installing the generated SDKs ...  
+E1129 15:04:35.670538   39756 generate_cmd.go:51] Failed to generate SDKs:  
+[connector "example"]: invalid Data Connect Connector no query found in connector  
+!!  dataconnect: Failed to generate Data Connect SDKs  
+Command failed with exit code 1  
++  dataconnect: Installed generated SDKs for . (web), functions (admin_node)  
+i  Run `ng add @angular/fire` to install angular sdk dependencies.  
+Visit https://github.com/invertase/tanstack-query-firebase/tree/main/packages/angular for more information on how to set up Angular Generated SDKs for Firebase Data Connect  
+  
++  Wrote configuration info to firebase.json  
++  Wrote project information to .firebaserc  
+  
++  Firebase initialization complete!  
+  
+To get started:  
+  
+i  Install the Data Connect VS Code Extensions. You can explore Data Connect Query on local pgLite and Cloud SQL Postgres Instance.  
+
+## Start Emulators
+```bash
+firebase emulators:start --project wpbest-website
+```
+
 ## Import Projects
 https://aistudio.google.com/app/projects
 
